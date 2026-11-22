@@ -102,3 +102,7 @@ def main() -> int:
 
     print(f"Tamamlandı: {OUTPUT_FILE} (Toplam {len(all_channels)} kanal)")
     return 0
+
+
+if _name_ == "_main_":
+    raise SystemExit(main())

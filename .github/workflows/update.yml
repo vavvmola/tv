@@ -1,8 +1,8 @@
-name: Update mola
+ame: Update mola
 
 on:
   schedule:
-    - cron: "0 */12 * * *" # Her 12 saatte bir (UTC)
+    - cron: "0 */3 * * *" # Her 3 saatte bir (00:00, 03:00, 06:00, 09:00, 12:00, 15:00, 18:00, 21:00 UTC)
   workflow_dispatch: {}
 
 permissions:
@@ -21,10 +21,10 @@ jobs:
           python-version: "3.11"
 
       - name: Install dependencies
-        run: pip install -r requirements.txt
+        run: python -m pip install --upgrade pip && pip install requests urllib3
 
       - name: Generate M3U playlist
-        run: python vavoo_playlist.py
+        run: python mola.py
 
       - name: Commit and push if changed
         run: |
@@ -34,6 +34,7 @@ jobs:
           if git diff --staged --quiet; then
             echo "Değişiklik yok."
           else
-            git commit -m "chore: update vavoo.m3u"
+            git commit -m "chore: update mola.m3u"
+            git pull --rebase origin "${GITHUB_REF#refs/heads/}"
             git push
           fi

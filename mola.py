@@ -104,5 +104,4 @@ def main() -> int:
     return 0
 
 
-if _name_ == "_main_":
-    raise SystemExit(main())
+main()

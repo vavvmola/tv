@@ -234,8 +234,7 @@ def fetch_group(
                 if next_guess not in visited_cursors and next_guess not in cursor_queue:
                     cursor_queue.append(next_guess)
 
-        except Exception as exc:
-            print(f"[Uyarı] {eng_name} (cursor={cursor}) alınırken hata: {exc}", file=sys.stderr)
+        except Exception:
             continue
 
     return channels
@@ -253,16 +252,6 @@ def build_m3u_content(channels: List[Dict[str, str]]) -> str:
     return "\n".join(lines) + "\n"
 
 
-def print_group_summary(channels: List[Dict[str, str]], order_map: Dict[str, int]) -> None:
-    counts: Dict[str, int] = {}
-    for ch in channels:
-        counts[ch["group"]] = counts.get(ch["group"], 0) + 1
-
-    print("\nGrup / Kategori Dağılımı (Sıralı):")
-    for group_name, count in sorted(counts.items(), key=lambda x: (order_map.get(x[0], 999), x[0].lower())):
-        print(f"  - {group_name}: {count} kanal")
-
-
 def main() -> int:
     all_channels: List[Tuple[int, Dict[str, str]]] = []
     use_tr_groups = os.getenv("USE_TR_GROUPS", "false").lower() in ("1", "true", "yes")
@@ -277,18 +266,11 @@ def main() -> int:
         session.headers.update(headers)
         for country_order, (eng_name, tr_name) in COUNTRIES.items():
             group_channels = fetch_group(session, eng_name, tr_name, use_tr_group_title=use_tr_groups)
-            print(f"{tr_name} ({eng_name}): {len(group_channels)} kanal kaydı oluşturuldu.")
             for ch in group_channels:
                 all_channels.append((country_order, ch))
 
     all_channels.sort(key=lambda item: get_sort_key(item[1], item[0]))
     sorted_channels = [ch for _, ch in all_channels]
-
-    group_order_map: Dict[str, int] = {}
-    for country_order, ch in all_channels:
-        grp = ch["group"]
-        if grp not in group_order_map:
-            group_order_map[grp] = get_sort_key(ch, country_order)[0]
 
     m3u_content = build_m3u_content(sorted_channels)
 
@@ -298,8 +280,6 @@ def main() -> int:
     with open(OUTPUT_FILE, "w", encoding="utf-8") as f:
         f.write(m3u_content)
 
-    print_group_summary(sorted_channels, group_order_map)
-    print(f"\nTamamlandı: {OUTPUT_FILE} (Toplam {len(sorted_channels)} kayıt)")
     return 0
 
 

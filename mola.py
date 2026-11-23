@@ -34,15 +34,15 @@ COUNTRIES: Dict[int, Tuple[str, str]] = {
 CATEGORY_PRIORITY: Dict[str, int] = {
     "TR Spor": 1,
     "TR Ulusal": 2,
-    "TR Haber": 3,
-    "TR Film": 4,
-    "TR Belgesel": 5,
-    "TR Çocuk": 6,
-    "TR Müzik": 7,
-    "TR Dini": 8,
-    "TR Yaşam": 9,
-    "TR Yerel": 10,
-    "TR Radyo": 11,
+    "TR Film": 3,
+    "TR Haber": 4,
+    "TR Yaşam": 5,
+    "TR Yerel": 6,
+    "TR Radyo": 7,
+    "TR Müzik": 8,
+    "TR Belgesel": 9,
+    "TR Çocuk": 10,
+    "TR Dini": 11,
     "TR Diğer": 12,
 }
 
@@ -63,6 +63,7 @@ def clean_channel_name(name):
     s = re.sub(r"S\s*[\x00-\x1F\x7F-\xFF?\s]*NEMA", "SINEMA", s, flags=re.IGNORECASE)
     s = re.sub(r"DREAM\s*T\s*R\s*K", "DREAM TURK", s, flags=re.IGNORECASE)
     s = re.sub(r"MINICA", "MINIKA", s, flags=re.IGNORECASE)
+    s = re.sub(r"TRT\s*M\s*Z\s*K", "TRT MUZIK", s, flags=re.IGNORECASE)
     s = re.sub(r"\s+", " ", s)
 
     return s.strip()
@@ -128,9 +129,9 @@ def categorize_channel(name):
         "TR Yaşam": r"24 KITCHEN|GURME|BEIN GURME|LIFESTYLE|\bLIFE TV\b|FASHION|WM TV|EGE ILE GAGA|24 RAW|\bTVEM\b|\bTV EM\b|AUTOMOTO|LINE TV|BILGILENDIRME|WOMAN|TELEGRAM",
         "TR Haber": r"(?:^|\b)24(?:\s*TV|\s*HABER)?(?:\b|$)|\bTV\s*24\b|HABER|\bNEWS\b|BLOOMBERG|\bCNN\b|EKOTURK|\bEKO ?TURK\b|\bEKOL\b|A ?PARA|APARA|PARANIN|HALK TV|TELE ?1|SOZCU|\bSZC\b|BENGU|BENGUTURK|TRT WORLD|TRT HABER|\bDHA\b|LIDER HABER|FLASH|FLASH HABER|MEDYA HABER|GLOBAL HABER|TRABZON HABER|BEIN SPORTS HABER|TURKHABER|HABERTURK|\bARTI TV\b|\bAKIT\b|TVNET|TV NET|MELTEM|A HABER|ULKE|A NEWS|KRT|ULUSAL",
         "TR Film": r"CINEVERSE|CI\s*EVERSE|DREAM|DINAMIK\s*TURK|SINEMA|CINEMA|CINEMALAR|GLOBALLER|SINEMAX|SINEVIZYON|\bMOVIES?\b|MOVIEMAX|MOVIESMART|BEIN MOVIES|BEIN BOX|BOX OFFICE|\bFX\b|FX HD|YESILCAM|GLOBAL BOX|PROTURK|FIX CINEMA|KINGBOX|ARENA BOX|SHOWMAX|SHOW MAX|REAL BOX|SMART BOX|BEST (?:AKSIYON|BILIMKURGU|DRAM|HABABAM|IMBD|KOMEDI|KORKU|LOCA|NETFLIX|SALON|SAVAS|TURK|WESTERN|YESILCAM)|MAX|\bLOCA\b|\bSALON\b|\bVIZYON\b|AKSIYON|KOMEDI|\bKORKU\b|\bDRAM\b|WESTERN|BILIM ?KURGU|\bSAVAS\b|\bIMBD\b|\bIMDB\b|\bFILM\b|FILMBOX|HORROR|OSCAR|KEMAL SUNAL|KEMAL SUNA|\b007\b|\bCINE ?1\b|SIFIR TV|SON C BOOM|\bYERLI\b|SPIDERMAN(?! TV)|ARENA BOX|MOVIE SMART|\bMTURK TV\b|SERIES|\bDIZI\b|BEIN SERIES|DIZISMART",
-        "TR Ulusal": r"\bTRT\b|\bTRT 1\b|\bTRT ?2\b|TRT2|\bTRT 3\b|TRT AVAZ|TRT TURK|TRT KURDI|TRT 4K|TRT EBA|\bKANAL D\b|\bATV\b|ATV AVRUPA|ATV EUROPA|STAR TV|\bSTAR\b|STAR HD|SHOW TV|SHOW TURK|\bSHOW\b|\bFOX\b|NOW ?TV|\bNOW\b|TV ?8|TV8[.,]5|BEYAZ TV|BEYAZ HD|\bBEYAZ\b|\b360\b|\bA2\b|TV ?100|TV ?4|TEVE ?2|TEVE2|CNN TURK|\bBRT ?[0-9]|\bBRTV\b|EURO ?D|EURO ?STAR|\bNTV\b|EXXEN TV|TIVITURK|TABII|OLAY TURK|KANAL AVRUPA|\bKANAL 7\b|KANAL 7 (?:AVRUPA|EUROPA)|EURO D|EURO STAR|SHOW TV EUROPA|TGRT EU|DUGUN TV|\bTBMM\b|\bTV 1\b|TVO TV|BEIN IZ",
         "TR Müzik": r"TRT\s*MZK|TRT\s*MUZIK|90LAR|90\s*LAR|BARIS\s*MANCO|ROCK|TEMPO|RUMEL|POP|MUZIK|M\s*Z\s*K|POWER TURK|POWER ?TV|POWERTURK|POWER (?:DANCE|LOVE|HD)|\bPOWER\b|KRAL POP|KRAL ?TV|\bKRAL\b|NR ?1|NUMBER ?1|NUMBER ONE|DAMAR|ARABESK|AKUSTIK|AHMET KAYA|IBRAHIM ERKAL|IBRAHIM TATLISES|\bTATLISES\b|ZERRIN OZER|SEZEN AKSU|TARKAN|SELDA BAGCAN|CENGIZ KURTOGLU|MAHSUN KIRMIZIGUL|MUSLUM GURSES|YILDIZ TILBE|FERDI TAYFUR|\bFERDI\b|DURSUN AL|MTV LIVE|VINTAGE MUSIC|RETRO TURK|TURKCE POP|TURKCE KLASIK|SLOW KARADENIZ|\bSLOW\b|\bZARA\b|\bSONER ARICA\b|\bFM TV\b|\bFMTV\b|REDBOX",
         "TR Dini": r"LALEGUL|DIYANET|MEHTAP|HILAL|KUDUS|SEMERKAND|MERCAN TV|VUSLAT|KARDELEN|DIYAR TV|\bDOST TV\b|\bYOL TV\b|HAYAT|HAYIRLI|HZ MERYEM|HZ OMER|HZ YUSUF|MAM EBU|ASHABI KEHF|HASAN VE HUSEYIN|SAT ?7 TURK|TRT DIYANET|\bTV ?5\b|\bTV5\b|REHBER|ILAHI|ILKE TV|MESAJ TV|SURELER|TURKCE MEAL|DURSUN AL ERZINCANLI|YUNUS EMRE|CEM TV|BARBAROS TV|ASLAN TV|TYT TURK|SATRANC|FASIL",
+        "TR Ulusal": r"\bTRT\b|\bTRT 1\b|\bTRT ?2\b|TRT2|\bTRT 3\b|TRT AVAZ|TRT TURK|TRT KURDI|TRT 4K|TRT EBA|\bKANAL D\b|\bATV\b|ATV AVRUPA|ATV EUROPA|STAR TV|\bSTAR\b|STAR HD|SHOW TV|SHOW TURK|\bSHOW\b|\bFOX\b|NOW ?TV|\bNOW\b|TV ?8|TV8[.,]5|BEYAZ TV|BEYAZ HD|\bBEYAZ\b|\b360\b|\bA2\b|TV ?100|TV ?4|TEVE ?2|TEVE2|CNN TURK|\bBRT ?[0-9]|\bBRTV\b|EURO ?D|EURO ?STAR|\bNTV\b|EXXEN TV|TIVITURK|TABII|OLAY TURK|KANAL AVRUPA|\bKANAL 7\b|KANAL 7 (?:AVRUPA|EUROPA)|EURO D|EURO STAR|SHOW TV EUROPA|TGRT EU|DUGUN TV|\bTBMM\b|\bTV 1\b|TVO TV|BEIN IZ",
         "TR Yerel": r"TVDEN|TV DEN|ADANA|ADIYAMAN|AFYON|AKSARAY|ALANYA|ANAKKALE|\bANKARA\b|ANKA TV|ANKARA TURKIYEM|SANLIURFA|ANTALYA|\bBURSA\b|ELAZIG|ERCIS|ERZURUM|ESKISEHIR|\bES TV\b|\bER TV\b|ETV KAYSERI|ETV MANISA|GAZIANTEP|\bICEL\b|KAHRAMANMARAS|KAYSERI|KOCAELI|KON TV|KONYA|MALATYA|MERSIN|ORDU|ALTAS TV|SIVAS|TRABZON|TUNCELI|DERSIM|\bURFA\b|IZMIR TV|TON TV|KIBRIS|EDIRNE|DENIZLI|\bKAY TV\b|KENT TURK|HUNAT|\bOBB\b|KANAL 12|KANAL 15|KANAL 23|KANAL 24|KANAL 26|KANAL 3\b|KANAL 32|KANAL 33|KANAL 34|KANAL 360|KANAL 42|KANAL 58|KANAL 68|KANAL FIRAT|KANAL URFA|KANAL V\b|\bKANAL Z\b|KANAL T\b|KANAL HAYAT|GUNEYDOGU|\bEGE\b|TEK RUMELI|YENI KOCAELI|OLAY TV|\bGRT\b|SUN RTV|SUN TV|\bKOY TV\b|IZMIR|TIVI 6|TV 41|TV 42|TV 52|TV 264|KOZA TV|MC EU|MERCAN|KADIRGA|\bFANATIK\b|AS TV|ISVI|GURBET24|T.A.Y|TAY TV|\bTAY\b|\bTMB\b|AV TV|MAVI KARADENIZ|EGE ILE GAGA|GAZIANTEP GRT|VIYANA TV|LUYS|EDESSA|BIR TV|ANADOLU|DIYAR|ERTV|HRT|VIZYON 58|ADA TV|CAN TV|DEHA|SIFIR|EKIN TURK|AFROTURK|ARAS|ARKADAG|VATAN|DORU|AKSU TV|KARE TV|ON 4|ON 6|PAMUKKALE|UCANKUS|DENIZ POSTASI",
     }
 
@@ -234,7 +235,8 @@ def fetch_group(
                 if next_guess not in visited_cursors and next_guess not in cursor_queue:
                     cursor_queue.append(next_guess)
 
-        except Exception:
+        except Exception as exc:
+            print(f"[Uyarı] {eng_name} (cursor={cursor}) alınırken hata: {exc}", file=sys.stderr)
             continue
 
     return channels
@@ -252,6 +254,16 @@ def build_m3u_content(channels: List[Dict[str, str]]) -> str:
     return "\n".join(lines) + "\n"
 
 
+def print_group_summary(channels: List[Dict[str, str]], order_map: Dict[str, int]) -> None:
+    counts: Dict[str, int] = {}
+    for ch in channels:
+        counts[ch["group"]] = counts.get(ch["group"], 0) + 1
+
+    print("\nGrup / Kategori Dağılımı (Sıralı):")
+    for group_name, count in sorted(counts.items(), key=lambda x: (order_map.get(x[0], 999), x[0].lower())):
+        print(f"  - {group_name}: {count} kanal")
+
+
 def main() -> int:
     all_channels: List[Tuple[int, Dict[str, str]]] = []
     use_tr_groups = os.getenv("USE_TR_GROUPS", "false").lower() in ("1", "true", "yes")
@@ -266,11 +278,18 @@ def main() -> int:
         session.headers.update(headers)
         for country_order, (eng_name, tr_name) in COUNTRIES.items():
             group_channels = fetch_group(session, eng_name, tr_name, use_tr_group_title=use_tr_groups)
+            print(f"{tr_name} ({eng_name}): {len(group_channels)} kanal kaydı oluşturuldu.")
             for ch in group_channels:
                 all_channels.append((country_order, ch))
 
     all_channels.sort(key=lambda item: get_sort_key(item[1], item[0]))
     sorted_channels = [ch for _, ch in all_channels]
+
+    group_order_map: Dict[str, int] = {}
+    for country_order, ch in all_channels:
+        grp = ch["group"]
+        if grp not in group_order_map:
+            group_order_map[grp] = get_sort_key(ch, country_order)[0]
 
     m3u_content = build_m3u_content(sorted_channels)
 
@@ -280,6 +299,8 @@ def main() -> int:
     with open(OUTPUT_FILE, "w", encoding="utf-8") as f:
         f.write(m3u_content)
 
+    print_group_summary(sorted_channels, group_order_map)
+    print(f"\nTamamlandı: {OUTPUT_FILE} (Toplam {len(sorted_channels)} kayıt)")
     return 0
 
 
